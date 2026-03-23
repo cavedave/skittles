@@ -2,3 +2,6 @@
 __pycache__/
 *.pyc
 .DS_Store
+
+# Local image not used by scripts (remove this line to track)
+pack.jpeg
