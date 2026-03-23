@@ -1,9 +1,9 @@
 """
-Skittles Analysis
------------------
-Loads raw Skittles bag data from the Excel spreadsheet,
-cleans outliers, and produces a sorted stacked bar chart
-with duplicate bags marked with a black dot.
+Skittles Analysis (fun-size)
+-----------------------------
+Loads Clare Wallace's Excel data, cleans outliers, and plots stacked bars:
+  • Colors left→right: red, orange, yellow, green, purple (rainbow / ROYGBV)
+  • Rows sorted by total Skittles per bag (largest first), then by those counts
 
 Usage:
     pip install pandas openpyxl matplotlib
@@ -61,14 +61,14 @@ COLOR_HEX = {
     "purple": "#441349",
 }
 
-# Order colours by total count across all bags (most common first)
-color_order = df[COLORS].sum().sort_values(ascending=False).index.tolist()
-print(f"Colour order (most→least): {color_order}")
+# Stack and tie-break order: rainbow (no blue in Skittles → purple as violet)
+color_order = ["red", "orange", "yellow", "green", "purple"]
+print(f"Colour order (rainbow): {color_order}")
 
-# Sort bags: primary by count of most common colour, then next, etc.
+# Sort bags: total Skittles first (largest at top), then red, orange, yellow, green, purple
 sorted_indices = sorted(
     range(len(df)),
-    key=lambda i: [df.loc[i, c] for c in color_order],
+    key=lambda i: [df.loc[i, color_order].sum()] + [df.loc[i, c] for c in color_order],
     reverse=True,
 )
 df_sorted = df.iloc[sorted_indices].reset_index(drop=True)
@@ -114,7 +114,7 @@ for i, (_, row) in enumerate(df_sorted.iterrows()):
     if is_duplicate[i]:
         gid = bag_to_group[i]
         marker_color = DUP_MARKER_COLORS[gid % len(DUP_MARKER_COLORS)]
-        ax.plot(-0.5, i, "s", color=marker_color, markersize=3.5,
+        ax.plot(-0.5, i, "s", color=marker_color, markersize=6,
                 markeredgecolor="white", markeredgewidth=0.3, zorder=5)
 
 for i in range(1, n_bags):
@@ -130,11 +130,12 @@ ax.spines["top"].set_visible(False)
 ax.spines["right"].set_visible(False)
 ax.spines["left"].set_visible(False)
 
-fig.text(0.5, 0.965, "Colors in Packets of Skittles",
-         ha="center", va="center", fontsize=24, fontweight="bold")
+fig.text(0.5, 0.965, "Fun-size Skittles: every bag, rainbow order",
+         ha="center", va="center", fontsize=22, fontweight="bold")
 fig.text(0.5, 0.943,
-         f'"No two Rainbows are the same" \u2014 yet {n_dupes} of {n_bags} bags are identical to another',
-         ha="center", va="center", fontsize=16, fontstyle="italic", color="#333333")
+         f"Sorted by Skittles per bag (then R\u2192O\u2192Y\u2192G\u2192P)  \u2022  "
+         f'{n_dupes} of {n_bags} bags identical to another  \u2022  "No two Rainbows are the same"',
+         ha="center", va="center", fontsize=12, fontstyle="italic", color="#333333")
 
 ax.text(0.02, 0.02,
         f"\u25a0 = duplicate bag ({n_dupes} of {n_bags})\n"
@@ -147,6 +148,6 @@ ax.text(max_skittles + 0.5, -n_bags * 0.03,
         ha="right", va="top",
         fontsize=9, style="italic", color="gray", clip_on=False)
 
-OUTPUT_FILE = "skittles_chart_v9.png"
+OUTPUT_FILE = "skittles_chart_v10.png"
 plt.savefig(OUTPUT_FILE, dpi=300, bbox_inches="tight", facecolor="white")
 print(f"Chart saved to {OUTPUT_FILE}")

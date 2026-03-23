@@ -14,13 +14,13 @@ pip install -r requirements.txt
 
 - **Data:** `skittles-megalist-3-6-25.xlsx` (sheet `Basic data`)
 - **Script:** `skittles_analysis.py`
-- **Output:** `skittles_chart_v9.png` (current main chart)
+- **Output:** `skittles_chart_v10.png` (rainbow stack + sort by total per bag)
 
 ```bash
 python skittles_analysis.py
 ```
 
-Keeps bags with **15–18** Skittles; drops obvious outliers. Stacked horizontal bars, duplicate packs marked on the left.
+Keeps bags with **15–18** Skittles; drops obvious outliers. Bars stack **R→O→Y→G→P**; rows sorted by **total Skittles per bag** (largest first), then by those five counts. Duplicate packs marked on the left. Older charts: `skittles_chart_v9.png` etc.
 
 ## 2. Full-size packs (possibly-wrong dataset)
 
@@ -51,7 +51,7 @@ curl -o skittles_possiblywrong.txt \
 
 ## Chart versions on disk
 
-**Fun-size (Wallace):** `skittles_chart.png` … `skittles_chart_v9.png` — **v9** matches `skittles_analysis.py`.
+**Fun-size (Wallace):** `skittles_chart.png` … `skittles_chart_v10.png` — **v10** matches `skittles_analysis.py`.
 
 **Full-size:** `skittles_possiblywrong_chart.png` (all 468, no outlier removal), **v2** (outliers removed, old sort), **v3** / **v4** (rainbow stack; v3 vs v4 = sort mode above).
 
